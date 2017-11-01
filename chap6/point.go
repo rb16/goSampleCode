@@ -25,10 +25,12 @@ func Distance(p, q Point) float64 {
 func (p Point) Distance(q Point) float64 {
 	return math.Hypot(q.X-p.X, q.Y-p.Y)
 }
+func (p *Point) ScaleBy(factor float64) {
+	p.X *= factor
+	p.Y *= factor
+}
 
-// rule
 // 1. All method of same types should have distinct name, but different types can have method name
-//
 func main() {
 	// there is no conflict between the two declation of function called Distance, the first decrales a package-level function
 	// call geometry.Distance, the second declares a method of the type Point, so its name is Point.Distance
@@ -37,9 +39,7 @@ func main() {
 	q := Point{4, 6}       // "5" method call
 
 	fmt.Println(Distance(p, q))
-
 	fmt.Println(p.Distance(q))
-
 	prem := Path{
 		{1, 1},
 		{5, 1},
@@ -47,4 +47,16 @@ func main() {
 		{1, 1},
 	}
 	fmt.Println(prem.Distance())
+	fmt.Println((&Point{1, 2}).Distance(q))
+
+	// if the reciever p of type Point but the reciever of requires *type go atumatically perform &p on variable p
+	// this works only for variable, including struct value s.X and array or slice value
+	// we can not perform *Point call on non-addressable Point recienver
+	p.ScaleBy(2)
+	fmt.Println(p)
+
+	(&q).ScaleBy(2)
+	fmt.Println(q)
+
+	//Point{1, 3}.ScaleBy(3) //cannot take the address of Point literal
 }
